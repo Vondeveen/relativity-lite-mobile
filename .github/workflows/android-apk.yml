@@ -32,7 +32,7 @@ jobs:
 
       # If android/ is missing, generate it (safe to re-run in an existing app)
       - name: Ensure Android project files exist
-        run: flutter create --platforms=android .
+        run: flutter create --project-name relativity_lite_mobile --platforms=android .
 
       - name: Install dependencies
         run: flutter pub get
