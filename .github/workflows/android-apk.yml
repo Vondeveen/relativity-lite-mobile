@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,16 +23,26 @@ jobs:
         with:
           flutter-version: '3.24.0'
           channel: 'stable'
+          cache: true
 
-      # Generate missing android/ folder so build works
-      - name: Create Android project files
+      - name: Flutter env
+        run: |
+          flutter --version
+          dart --version
+
+      # If android/ is missing, generate it (safe to re-run in an existing app)
+      - name: Ensure Android project files exist
         run: flutter create --platforms=android .
 
       - name: Install dependencies
         run: flutter pub get
 
+      # Optional but helpful: show pub deps (debugging)
+      - name: Pub deps tree
+        run: flutter pub deps --style=compact
+
       - name: Build debug APK (installable)
-        run: flutter build apk --debug
+        run: flutter build apk --debug --verbose
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
